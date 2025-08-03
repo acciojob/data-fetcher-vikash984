@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const DataFetcher = () => {
+const App = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,4 +33,4 @@ const DataFetcher = () => {
   );
 };
 
-export default DataFetcher;
+export default App;
