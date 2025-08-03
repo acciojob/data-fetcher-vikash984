@@ -1,30 +1,25 @@
 import React, { useState, useEffect } from "react";
 
 const DataFetcher = () => {
-  const [data, setData] = useState(null);      // Holds fetched data
-  const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null);    // Error state
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    async function fetchData() {
+      setLoading(true);
+      setError(null);
       try {
-        setLoading(true);
-        setError(null);
-
-        const response = await fetch("https://dummyjson.com/products");
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const json = await response.json();
+        const res = await fetch("https://dummyjson.com/products");
+        if (!res.ok) throw new Error(`Error: ${res.status}`);
+        const json = await res.json();
         setData(json);
-      } catch (err) {
-        setError(err.message || "Something went wrong");
+      } catch (e) {
+        setError(e.message);
       } finally {
         setLoading(false);
       }
-    };
-
+    }
     fetchData();
   }, []);
 
@@ -33,7 +28,6 @@ const DataFetcher = () => {
 
   return (
     <div>
-      <h2>Fetched Data:</h2>
       <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
