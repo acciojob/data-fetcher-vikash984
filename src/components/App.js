@@ -5,29 +5,24 @@ const fruits = ["apple", "banana", "cherry", "date", "elderberry", "fig"];
 
 const App = () => {
   const [input, setInput] = useState("");
-  const [suggestions, setSuggestions] = useState(fruits); // ✅ initial render
+  const [suggestions, setSuggestions] = useState(fruits); // ✅ start with all
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (input.trim() === "") {
-        setSuggestions(fruits); // ✅ show all on empty
-      } else {
-        const filtered = fruits.filter((fruit) =>
-          fruit.toLowerCase().startsWith(input.toLowerCase())
-        );
-        setSuggestions(filtered);
-      }
-    }, 300);
-
-    return () => clearTimeout(timeoutId);
+    // ✅ No timeout
+    if (input.trim() === "") {
+      setSuggestions(fruits);
+    } else {
+      const filtered = fruits.filter((fruit) =>
+        fruit.toLowerCase().startsWith(input.toLowerCase())
+      );
+      setSuggestions(filtered);
+    }
   }, [input]);
 
   return (
     <div id="main">
-      {/* Do not remove the main div */}
       <input
         type="text"
-        placeholder=""
         value={input}
         onChange={(e) => setInput(e.target.value)}
       />
