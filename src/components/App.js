@@ -1,34 +1,41 @@
 import React, { useState, useEffect } from "react";
+import "./../styles/App.css";
+
+const fruits = ["apple", "banana", "cherry", "date", "elderberry", "fig"];
 
 const App = () => {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [input, setInput] = useState("");
+  const [suggestions, setSuggestions] = useState(fruits); // ✅ initial render
 
   useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      setError(null);
-      try {
-        const res = await fetch("https://dummyjson.com/products");
-        if (!res.ok) throw new Error(`Error: ${res.status}`);
-        const json = await res.json();
-        setData(json);
-      } catch (e) {
-        setError(e.message);
-      } finally {
-        setLoading(false);
+    const timeoutId = setTimeout(() => {
+      if (input.trim() === "") {
+        setSuggestions(fruits); // ✅ show all on empty
+      } else {
+        const filtered = fruits.filter((fruit) =>
+          fruit.toLowerCase().startsWith(input.toLowerCase())
+        );
+        setSuggestions(filtered);
       }
-    }
-    fetchData();
-  }, []);
+    }, 300);
 
-  if (loading) return <div>Loading data...</div>;
-  if (error) return <div>Error: {error}</div>;
+    return () => clearTimeout(timeoutId);
+  }, [input]);
 
   return (
-    <div>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+    <div id="main">
+      {/* Do not remove the main div */}
+      <input
+        type="text"
+        placeholder=""
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+      />
+      <ul>
+        {suggestions.map((fruit, index) => (
+          <li key={index}>{fruit}</li>
+        ))}
+      </ul>
     </div>
   );
 };
